@@ -30,6 +30,9 @@ void add_polygon( struct matrix *polygons,
 		  double x0, double y0, double z0, 
 		  double x1, double y1, double z1, 
 		  double x2, double y2, double z2 ) {
+  add_point(polygons, x0, y0, z0);
+  add_point(polygons, x1, y1, z1);
+  add_point(polygons, x2, y2, z2);
 }
 
 /*======== void draw_polygons() ==========
@@ -45,6 +48,16 @@ triangles
 jdyrlandweaver
 ====================*/
 void draw_polygons( struct matrix *polygons, screen s, color c ) {
+  struct matrix * triangles = new_matrix(4, 3);
+  int i = 0;
+  for (i = 0; i < polygons->lastcol - 6; i+=6) {
+    draw_line(polygons->m[0][i], polygons->m[1][i],
+	      polygons->m[0][i+1], polygons->m[1][i+1], s, c);
+    draw_line(polygons->m[0][i+2], polygons->m[1][i+2],
+	      polygons->m[0][i+3], polygons->m[1][i+3], s, c);
+    draw_line(polygons->m[0][i+4], polygons->m[1][i+4],
+	      polygons->m[0][i+5], polygons->m[1][i+5], s, c);
+  }
 }
 
 
@@ -85,10 +98,10 @@ void add_sphere( struct matrix * points,
   latStop = num_steps;
   longStart = 0;
   longStop = num_steps;
-  
+
   for ( lat = latStart; lat < latStop; lat++ ) {
     for ( longt = longStart; longt < longStop; longt++ ) {
-      
+      /*
       index = lat * (num_steps+1) + longt;
       add_edge( points, temp->m[0][index],
 		temp->m[1][index],
@@ -97,6 +110,8 @@ void add_sphere( struct matrix * points,
 		temp->m[1][index] + 1,
 		temp->m[2][index] );
     }//end points only
+      */
+      
   }
   free_matrix(temp);
 }
