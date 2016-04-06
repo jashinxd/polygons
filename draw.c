@@ -48,7 +48,6 @@ triangles
 jdyrlandweaver
 ====================*/
 void draw_polygons( struct matrix *polygons, screen s, color c ) {
-  struct matrix * triangles = new_matrix(4, 3);
   int i = 0;
   for (i = 0; i < polygons->lastcol - 6; i+=6) {
     draw_line(polygons->m[0][i], polygons->m[1][i],
@@ -84,7 +83,7 @@ void add_sphere( struct matrix * points,
   struct matrix * temp;
   int lat, longt;
   int index;
-  double x, y, z;
+  //double x, y, z;
   int num_steps;
   
   num_steps = MAX_STEPS / step;
@@ -92,27 +91,26 @@ void add_sphere( struct matrix * points,
   temp = new_matrix( 4, num_steps * num_steps );
   //generate the points on the sphere
   generate_sphere( temp, cx, cy, r, step );
-
   int latStop, longStop, latStart, longStart;
   latStart = 0;
   latStop = num_steps;
   longStart = 0;
   longStop = num_steps;
-
+ 
+  struct matrix * polygons = new_matrix(4, 0, 0);
   for ( lat = latStart; lat < latStop; lat++ ) {
     for ( longt = longStart; longt < longStop; longt++ ) {
-      /*
       index = lat * (num_steps+1) + longt;
-      add_edge( points, temp->m[0][index],
+      add_polygon( polygons, temp->m[0][index],
 		temp->m[1][index],
 		temp->m[2][index],
-		temp->m[0][index] + 1,
-		temp->m[1][index] + 1,
-		temp->m[2][index] );
+		temp->m[0][index + 1],
+		temp->m[1][index + 1],
+		temp->m[2][index + 1],
+		   temp->m[0][index + num_steps + 1   );
     }//end points only
-      */
-      
   }
+  */
   free_matrix(temp);
 }
 
