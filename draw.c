@@ -32,7 +32,10 @@ void add_polygon( struct matrix *polygons,
 		  double x2, double y2, double z2 ) {
   add_point(polygons, x0, y0, z0);
   add_point(polygons, x1, y1, z1);
+  add_point(polygons, x1, y1, z1);
   add_point(polygons, x2, y2, z2);
+  add_point(polygons, x2, y2, z2);
+  add_point(polygons, x0, y0, z0);
 }
 
 /*======== void draw_polygons() ==========
@@ -76,7 +79,7 @@ void draw_polygons( struct matrix *polygons, screen s, color c ) {
 
   jdyrlandweaver
   ====================*/
-void add_sphere( struct matrix * points, 
+void add_sphere( struct matrix * polygons, 
 		 double cx, double cy, double r, 
 		 int step ) {
 
@@ -97,20 +100,31 @@ void add_sphere( struct matrix * points,
   longStart = 0;
   longStop = num_steps;
  
-  struct matrix * polygons = new_matrix(4, 0, 0);
   for ( lat = latStart; lat < latStop; lat++ ) {
     for ( longt = longStart; longt < longStop; longt++ ) {
       index = lat * (num_steps+1) + longt;
       add_polygon( polygons, temp->m[0][index],
-		temp->m[1][index],
-		temp->m[2][index],
-		temp->m[0][index + 1],
-		temp->m[1][index + 1],
-		temp->m[2][index + 1],
-		   temp->m[0][index + num_steps + 1   );
-    }//end points only
+		   temp->m[1][index],
+		   temp->m[2][index],
+		   temp->m[0][index + 1],
+		   temp->m[1][index + 1],
+		   temp->m[2][index + 1],
+		   temp->m[0][index + step + 1],
+		   temp->m[1][index + step + 1],
+		   temp->m[2][index + step + 1]);
+      if (mod(index,steps) != 0 || mod(index, steps) != 5) {
+	add_polygon( polygons, temp->m[0][index],
+		     temp->m[1][index],
+		     temp->m[2][index],
+		     temp->m[0][index + step + 1],
+		     temp->m[1][index + step + 1],
+		     temp->m[2][index + step + 1],
+		     temp->m[0][index + 1],
+		     temp->m[1][index + 1],
+		     temp->m[2][index + 1]);
+      }//end points only
+    }
   }
-  */
   free_matrix(temp);
 }
 
@@ -149,9 +163,9 @@ void generate_sphere( struct matrix * points,
       circ = (double)circle / MAX_STEPS;
       x = r * cos( 2 * M_PI * circ ) + cx;
       y = r * sin( 2 * M_PI * circ ) *
-	cos( 2 * M_PI * rot ) + cy;
+	cos( M_PI * rot ) + cy;
       z = r * sin( 2 * M_PI * circ ) *
-	sin( 2 * M_PI * rot );
+	sin( M_PI * rot );
 
       add_point( points, x, y, z);
     }

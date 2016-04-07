@@ -80,6 +80,7 @@ void parse_file ( char * filename,
   FILE *f;
   char line[256];
   struct matrix * tmp;
+  struct matrix * polym = new_matrix(4, 0);
   double angle;
   color g;
 
@@ -141,7 +142,7 @@ void parse_file ( char * filename,
     else if (strncmp(line, "sphere", strlen(line)) == 0 ) {
       fgets(line, 255, f);
       sscanf(line, "%lf %lf %lf", &x, &y, &z);
-      add_sphere(pm, x, y, z, 1);
+      add_sphere(pm, x, y, z, 5);
       //printf( "%lf %lf %lf\n", x, y, z);
     }
     else if (strncmp(line, "torus", strlen(line)) == 0 ) {
@@ -204,6 +205,7 @@ void parse_file ( char * filename,
     else if ( strncmp(line, "display", strlen(line)) == 0 ) {
       clear_screen(s);
       draw_lines(pm, s, g);
+      draw_polygons(pm, s, g);
       display(s);
     }
     else if ( strncmp(line, "save", strlen(line)) == 0 ) {
