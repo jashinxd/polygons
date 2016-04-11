@@ -103,26 +103,26 @@ void add_sphere( struct matrix * polygons,
   for ( lat = latStart; lat < latStop; lat++ ) {
     for ( longt = longStart; longt < longStop; longt++ ) {
       index = lat * (num_steps+1) + longt;
-      add_polygon( polygons, temp->m[0][index],
-		   temp->m[1][index],
-		   temp->m[2][index],
-		   temp->m[0][index + 1],
-		   temp->m[1][index + 1],
-		   temp->m[2][index + 1],
-		   temp->m[0][index + step + 1],
-		   temp->m[1][index + step + 1],
-		   temp->m[2][index + step + 1]);
-      if (mod(index,steps) != 0 || mod(index, steps) != 5) {
+      if (index < 20) {
+	add_polygon( polygons, temp->m[0][index],
+		     temp->m[1][index],
+		     temp->m[2][index],
+		     temp->m[0][index + 1],
+		     temp->m[1][index + 1],
+		     temp->m[2][index + 1],
+		     temp->m[0][index + step + 1],
+		     temp->m[1][index + step + 1],
+		     temp->m[2][index + step + 1]);
 	add_polygon( polygons, temp->m[0][index],
 		     temp->m[1][index],
 		     temp->m[2][index],
 		     temp->m[0][index + step + 1],
 		     temp->m[1][index + step + 1],
 		     temp->m[2][index + step + 1],
-		     temp->m[0][index + 1],
-		     temp->m[1][index + 1],
-		     temp->m[2][index + 1]);
-      }//end points only
+		     temp->m[0][index + step],
+		     temp->m[1][index + step],
+		     temp->m[2][index + step]);
+      }//end points only*/
     }
   }
   free_matrix(temp);
@@ -161,11 +161,11 @@ void generate_sphere( struct matrix * points,
     for ( circle = circStart; circle < circStop; circle+= step ) {
 
       circ = (double)circle / MAX_STEPS;
-      x = r * cos( 2 * M_PI * circ ) + cx;
-      y = r * sin( 2 * M_PI * circ ) *
-	cos( M_PI * rot ) + cy;
-      z = r * sin( 2 * M_PI * circ ) *
-	sin( M_PI * rot );
+      x = r * cos( M_PI * circ ) + cx;
+      y = r * sin( M_PI * circ ) *
+	cos( 2 * M_PI * rot ) + cy;
+      z = r * sin(M_PI * circ ) *
+	sin( 2 * M_PI * rot );
 
       add_point( points, x, y, z);
     }
@@ -294,30 +294,38 @@ void add_box( struct matrix * points,
   y2 = y - height;
   z2 = z - depth;
 
-  add_edge( points, 
-	    x, y, z, 
-	    x, y, z );
-  add_edge( points, 
-	    x, y2, z, 
-	    x, y2, z );
-  add_edge( points, 
-	    x2, y, z, 
-	    x2, y, z );
-  add_edge( points, 
-	    x2, y2, z, 
-	    x2, y2, z );
-  add_edge( points, 
-	    x, y, z2, 
-	    x, y, z2 );
-  add_edge( points, 
-	    x, y2, z2, 
-	    x, y2, z2 );
-  add_edge( points, 
-	    x2, y, z2, 
-	    x2, y, z2 );
-  add_edge( points, 
-	    x2, y2, z2, 
-	    x2, y2, z2 );
+  add_polygon( points, 
+	       x, y, z, 
+	       x, y2, z,
+	       x2, y2, z);
+  add_polygon( points, 
+	       x, y, z, 
+	       x2, y2, z,
+	       x2, y, z);
+  add_polygon( points, 
+	       x2, y, z, 
+	       x2, y2, z,
+	       x2, y2, z2);
+  add_polygon( points, 
+	       x2, y, z, 
+	       x2, y2, z2,
+	       x2, y, z2);
+  add_polygon( points, 
+	       x2, y, z2, 
+	       x2, y2, z2,
+	       x, y2, z2);
+  add_polygon( points, 
+	       x2, y, z2, 
+	       x, y2, z2,
+	       x, y, z2);
+  add_polygon( points, 
+	       x, y, z2, 
+	       x, y2, z2,
+	       x, y2, z);
+  add_polygon( points, 
+	       x, y, z2, 
+	       x2, y2, z,
+	       x, y, z);
 }
   
 /*======== void add_circle() ==========
